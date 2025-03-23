@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "965798040190",
+    "project_id": "mcoffee-d8ab9",
+    "storage_bucket": "mcoffee-d8ab9.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:965798040190:android:bd5db0d4faa6da7acefe2f",
+        "android_client_info": {
+          "package_name": "com.example.mcoffee"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBm_uhqMeFJcq4Vi8GvE79mzyhBQ4MM4pQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

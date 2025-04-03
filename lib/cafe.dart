@@ -69,7 +69,6 @@ class _CafePageState extends State<CafePage> {
         builder: (context) => const ProfilePage(
           userName: "Alex",
           userEmail: "adosmenesk@pm.me",
-          userPhone: "+375 33 664-57-36",
           storeAddress: "Magic Coffee, Downtown, Calicut",
         ),
       ),

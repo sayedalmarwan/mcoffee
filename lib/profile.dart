@@ -5,14 +5,12 @@ import 'package:qr_flutter/qr_flutter.dart';
 class ProfilePage extends StatelessWidget {
   final String userName;
   final String userEmail;
-  final String userPhone;
   final String storeAddress;
 
   const ProfilePage({
     super.key,
     required this.userName,
     required this.userEmail,
-    required this.userPhone,
     required this.storeAddress,
   });
 
@@ -66,7 +64,7 @@ class ProfilePage extends StatelessWidget {
                     borderRadius: BorderRadius.circular(24),
                   ),
                   child: QrImageView(
-                    data: "$userName - $userPhone - $userEmail",
+                    data: "$userName - $userEmail",
                     version: QrVersions.auto,
                     size: 200,
                     eyeStyle: QrEyeStyle(
@@ -176,14 +174,7 @@ class ProfilePage extends StatelessWidget {
                 color: colorScheme.onSurface,
               ),
             ),
-            const SizedBox(height: 12),
-            _buildInfoItem(
-              icon: Icons.phone_outlined,
-              label: "Phone Number",
-              value: userPhone,
-              colorScheme: colorScheme,
-              onEdit: () {},
-            ),
+            
             const SizedBox(height: 12),
             _buildInfoItem(
               icon: Icons.email_outlined,

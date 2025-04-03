@@ -115,7 +115,6 @@ class _MenuPageState extends State<MenuPage>
                   builder: (context) => ProfilePage(
                     userName: "Alex",
                     userEmail: "adosmenesk@pm.me",
-                    userPhone: "+375 33 664-57-36",
                     storeAddress: widget.selectedStore['location'],
                   ),
                 ),

@@ -42,7 +42,6 @@ class MyApp extends StatelessWidget {
         '/profile': (context) => const ProfilePage(
           userName: "Alex",
           userEmail: "adosmenesk@pm.me",
-          userPhone: "+375 33 664-57-36",
           storeAddress: "Bradford BD1 1PR",
         ),
       },

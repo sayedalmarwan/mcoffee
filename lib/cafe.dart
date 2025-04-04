@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
-
 import 'package:mcoffee/menu.dart';
 import 'package:mcoffee/profile.dart';
 import 'package:mcoffee/theme.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 
 class CafePage extends StatefulWidget {
   const CafePage({super.key});
@@ -50,30 +51,30 @@ class _CafePageState extends State<CafePage> {
     super.dispose();
   }
 
-  void _onStoreSelected(Store store) {
+  void _onStoreSelected(Store store) async {
     final index = stores.indexOf(store);
     setState(() => selectedStoreIndex = index);
     mapController.move(store.coordinates, 15);
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => MenuPage(selectedStore: store.toMap()),
-      ),
-    );
+
+    // Save selected store to Firebase
+    final userId = FirebaseAuth.instance.currentUser?.uid;
+    if (userId != null) {
+      final databaseRef = FirebaseDatabase.instance.ref('users/$userId');
+      await databaseRef.update({
+        'preferredStore': store.location,
+      });
+    }
+
+    if (mounted) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => MenuPage(selectedStore: store.toMap()),
+        ),
+      );
+    }
   }
 
-  void _openProfile() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => const ProfilePage(
-          userName: "Alex",
-          userEmail: "adosmenesk@pm.me",
-          storeAddress: "Magic Coffee, Downtown, Calicut",
-        ),
-      ),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -88,7 +89,16 @@ class _CafePageState extends State<CafePage> {
           actions: [
             IconButton(
               icon: const Icon(Icons.person_outline),
-              onPressed: _openProfile,
+              onPressed: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ProfilePage(
+                    storeAddress: selectedStoreIndex != -1
+                        ? stores[selectedStoreIndex].location
+                        : 'No store selected',
+                  ),
+                ),
+              ),
             ),
           ],
           centerTitle: true,

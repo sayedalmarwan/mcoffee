@@ -39,11 +39,7 @@ class MyApp extends StatelessWidget {
         '/menu': (context) => const MenuPage(selectedStore: {}),
         '/forgot-password': (context) => const ForgotPassword(),
         '/order-confirm': (context) => const OrderConfirmationScreen(),
-        '/profile': (context) => const ProfilePage(
-          userName: "Alex",
-          userEmail: "adosmenesk@pm.me",
-          storeAddress: "Bradford BD1 1PR",
-        ),
+        '/profile': (context) => const ProfilePage(storeAddress: 'No store selected'),
       },
     );
   }

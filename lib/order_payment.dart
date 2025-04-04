@@ -128,7 +128,7 @@ class _OrderPaymentPageState extends State<OrderPaymentPage> {
 
     return PopScope(
       canPop: !isProcessing,
-      onPopInvoked: (didPop) {
+      onPopInvokedWithResult: (didPop, result) {
         if (!didPop && isProcessing) {
           _showMessage("Please wait while processing payment");
         }

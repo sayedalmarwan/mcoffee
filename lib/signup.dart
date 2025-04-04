@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:mcoffee/theme.dart';
 
 class SignUpPage extends StatefulWidget {
@@ -37,8 +38,17 @@ class _SignUpPageState extends State<SignUpPage> {
         password: _passwordController.text.trim(),
       );
 
-      // Update user profile with full name
-      await userCredential.user?.updateDisplayName(_fullNameController.text.trim());
+      // Save user data to Realtime Database
+      final userId = userCredential.user?.uid;
+      if (userId != null) {
+        final databaseRef = FirebaseDatabase.instance.ref('users/$userId');
+        await databaseRef.set({
+          'name': _fullNameController.text.trim(),
+          'email': _emailController.text.trim(),
+          'createdAt': ServerValue.timestamp,
+          'preferredStore': 'No store selected',
+        });
+      }
 
       if (mounted) {
         Navigator.pushReplacementNamed(context, '/cafe'); // Navigate to CafePage

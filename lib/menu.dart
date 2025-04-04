@@ -113,9 +113,7 @@ class _MenuPageState extends State<MenuPage>
                 context,
                 MaterialPageRoute(
                   builder: (context) => ProfilePage(
-                    userName: "Alex",
-                    userEmail: "adosmenesk@pm.me",
-                    storeAddress: widget.selectedStore['location'],
+                    storeAddress: widget.selectedStore['location'] ?? 'No store selected',
                   ),
                 ),
               ),

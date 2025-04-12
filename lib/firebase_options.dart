@@ -46,6 +46,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '965798040190',
     projectId: 'mcoffee-d8ab9',
     authDomain: 'mcoffee-d8ab9.firebaseapp.com',
+    databaseURL: 'https://mcoffee-d8ab9-default-rtdb.firebaseio.com',
     storageBucket: 'mcoffee-d8ab9.firebasestorage.app',
     measurementId: 'G-G81QRMVL77',
   );
@@ -55,6 +56,7 @@ class DefaultFirebaseOptions {
     appId: '1:965798040190:android:bd5db0d4faa6da7acefe2f',
     messagingSenderId: '965798040190',
     projectId: 'mcoffee-d8ab9',
+    databaseURL: 'https://mcoffee-d8ab9-default-rtdb.firebaseio.com',
     storageBucket: 'mcoffee-d8ab9.firebasestorage.app',
   );
 
@@ -63,6 +65,7 @@ class DefaultFirebaseOptions {
     appId: '1:965798040190:ios:4416fba7089d304ecefe2f',
     messagingSenderId: '965798040190',
     projectId: 'mcoffee-d8ab9',
+    databaseURL: 'https://mcoffee-d8ab9-default-rtdb.firebaseio.com',
     storageBucket: 'mcoffee-d8ab9.firebasestorage.app',
     iosBundleId: 'com.example.mcoffee',
   );
@@ -72,6 +75,7 @@ class DefaultFirebaseOptions {
     appId: '1:965798040190:ios:4416fba7089d304ecefe2f',
     messagingSenderId: '965798040190',
     projectId: 'mcoffee-d8ab9',
+    databaseURL: 'https://mcoffee-d8ab9-default-rtdb.firebaseio.com',
     storageBucket: 'mcoffee-d8ab9.firebasestorage.app',
     iosBundleId: 'com.example.mcoffee',
   );
@@ -82,7 +86,9 @@ class DefaultFirebaseOptions {
     messagingSenderId: '965798040190',
     projectId: 'mcoffee-d8ab9',
     authDomain: 'mcoffee-d8ab9.firebaseapp.com',
+    databaseURL: 'https://mcoffee-d8ab9-default-rtdb.firebaseio.com',
     storageBucket: 'mcoffee-d8ab9.firebasestorage.app',
     measurementId: 'G-N6W3B2WW1D',
   );
+
 }

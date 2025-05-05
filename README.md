@@ -1,16 +1,38 @@
-# mcoffee
+Magic Coffee ☕ (Flutter App)
 
-A new Flutter project.
+A beautiful and functional coffee ordering mobile application built with Flutter and Material 3 design, including Store Locator, Cart, and Online Payment via Razorpay.
+✨ Features
 
-## Getting Started
+    🔥 Browse coffee menu and customize orders
 
-This project is a starting point for a Flutter application.
+    📍 Locate nearest Magic Coffee stores using OpenStreetMap
 
-A few resources to get you started if this is your first Flutter project:
+    🛒 Manage cart items and track total order
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+    💳 UPI / Credit/Debit Card payments (Razorpay)
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+    🎨 Material You (M3) based UI/UX
+
+    🚀 Swipe-back navigation for smooth user experience
+
+    🔒 Secure authentication (Sign in, Sign up, Forgot password)
+
+📱 Screenshots
+
+🛠️ Tech Stack
+
+    Flutter (Dart)
+
+    OpenStreetMap (flutter_map)
+
+    Razorpay Integration (razorpay_flutter)
+
+    Clean Architecture (Pages, Widgets, Theme separation)
+
+📦 Packages Used
+
+    flutter_map
+
+    latlong2
+
+    razorpay_flutter

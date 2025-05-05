@@ -1,4 +1,4 @@
-Magic Coffee ☕ (Flutter App)
+MCoffee ☕ (Flutter App)
 
 A beautiful and functional coffee ordering mobile application built with Flutter and Material 3 design, including Store Locator, Cart, and Online Payment via Razorpay.
 ✨ Features

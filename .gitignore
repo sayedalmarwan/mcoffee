@@ -44,3 +44,4 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 mcoffee-v1.0.0-debug.apk
+mcoffee-v1.0.0.apk

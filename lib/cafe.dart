@@ -3,7 +3,6 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:mcoffee/menu.dart';
 import 'package:mcoffee/profile.dart';
-import 'package:mcoffee/theme.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 
@@ -56,11 +55,9 @@ class _CafePageState extends State<CafePage> {
     setState(() => selectedStoreIndex = index);
     mapController.move(store.coordinates, 15);
 
-    // Save selected store to Firebase
     final userId = FirebaseAuth.instance.currentUser?.uid;
     if (userId != null) {
-      final databaseRef = FirebaseDatabase.instance.ref('users/$userId');
-      await databaseRef.update({
+      await FirebaseDatabase.instance.ref('users/$userId').update({
         'preferredStore': store.location,
       });
     }
@@ -75,175 +72,164 @@ class _CafePageState extends State<CafePage> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
-    return AppWithSwipeBack(
-      child: Scaffold(
-        backgroundColor: colorScheme.surface,
-        appBar: AppBar(
-          title: const Text('Select Store'),
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.person_outline),
-              onPressed: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => ProfilePage(
-                    storeAddress: selectedStoreIndex != -1
-                        ? stores[selectedStoreIndex].location
-                        : 'No store selected',
-                  ),
+    return Scaffold(
+      backgroundColor: colorScheme.surface,
+      appBar: AppBar(
+        title: const Text('Select Store'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.person_outline),
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ProfilePage(
+                  storeAddress: selectedStoreIndex != -1
+                      ? stores[selectedStoreIndex].location
+                      : 'No store selected',
                 ),
               ),
             ),
-          ],
-          centerTitle: true,
-          backgroundColor: colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
-          elevation: 0,
-        ),
-        body: Stack(
-          children: [
-            ClipRRect(
-              borderRadius: const BorderRadius.vertical(bottom: Radius.circular(16)),
-              child: FlutterMap(
-                mapController: mapController,
-                options: const MapOptions(
-                  initialCenter: LatLng(10.8505, 76.2711),
-                  initialZoom: 7.5,
+          ),
+        ],
+        centerTitle: true,
+        backgroundColor: colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+        elevation: 0,
+      ),
+      body: Stack(
+        children: [
+          ClipRRect(
+            borderRadius: const BorderRadius.vertical(bottom: Radius.circular(16)),
+            child: FlutterMap(
+              mapController: mapController,
+              options: const MapOptions(
+                initialCenter: LatLng(10.8505, 76.2711),
+                initialZoom: 7.5,
+              ),
+              children: [
+                TileLayer(
+                  urlTemplate: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+                  subdomains: const ['a', 'b', 'c'],
                 ),
-                children: [
-                  TileLayer(
-                    urlTemplate: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-                    subdomains: const ['a', 'b', 'c'],
-                  ),
-                  MarkerLayer(
-                    markers: [
-                      for (var i = 0; i < stores.length; i++)
-                        Marker(
-                          point: stores[i].coordinates,
-                          child: GestureDetector(
-                            onTap: () {
-                              setState(() => selectedStoreIndex = i);
-                              mapController.move(stores[i].coordinates, 15);
-                            },
-                            child: Icon(
-                              Icons.location_on,
-                              color: colorScheme.primary,
-                              size: selectedStoreIndex == i ? 48 : 40,
-                            ),
+                MarkerLayer(
+                  markers: [
+                    for (var i = 0; i < stores.length; i++)
+                      Marker(
+                        point: stores[i].coordinates,
+                        child: GestureDetector(
+                          onTap: () {
+                            setState(() => selectedStoreIndex = i);
+                            mapController.move(stores[i].coordinates, 15);
+                          },
+                          child: Icon(
+                            Icons.location_on,
+                            color: colorScheme.primary,
+                            size: selectedStoreIndex == i ? 48 : 40,
                           ),
                         ),
-                    ],
+                      ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          DraggableScrollableSheet(
+            initialChildSize: 0.4,
+            minChildSize: 0.3,
+            maxChildSize: 0.8,
+            builder: (context, scrollController) => Container(
+              decoration: BoxDecoration(
+                color: colorScheme.surface,
+                borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+                boxShadow: [
+                  BoxShadow(
+                    color: colorScheme.shadow.withValues(alpha: 0.1),
+                    blurRadius: 10,
+                    offset: const Offset(0, -5),
+                  ),
+                ],
+              ),
+              child: Column(
+                children: [
+                  Container(
+                    margin: const EdgeInsets.symmetric(vertical: 8),
+                    width: 40,
+                    height: 4,
+                    decoration: BoxDecoration(
+                      color: colorScheme.onSurfaceVariant.withValues(alpha: 0.2),
+                      borderRadius: BorderRadius.circular(2),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                    child: Row(
+                      children: [
+                        Icon(Icons.storefront_outlined, color: colorScheme.primary),
+                        const SizedBox(width: 8),
+                        Text(
+                          "Magic Coffee Stores",
+                          style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    child: ListView.builder(
+                      controller: scrollController,
+                      padding: const EdgeInsets.all(16),
+                      itemCount: stores.length,
+                      itemBuilder: (context, index) {
+                        final store = stores[index];
+                        final isSelected = selectedStoreIndex == index;
+
+                        return Card(
+                          margin: const EdgeInsets.only(bottom: 8),
+                          color: isSelected
+                              ? colorScheme.primaryContainer
+                              : colorScheme.surfaceContainerHighest,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            side: BorderSide(
+                              color: isSelected ? colorScheme.primary : Colors.transparent,
+                              width: 1,
+                            ),
+                          ),
+                          child: ListTile(
+                            leading: Icon(Icons.storefront_outlined, color: colorScheme.primary),
+                            title: Text(store.name, style: theme.textTheme.titleMedium),
+                            subtitle: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(store.location),
+                                Row(
+                                  children: [
+                                    Icon(Icons.star, size: 16, color: colorScheme.primary),
+                                    const SizedBox(width: 4),
+                                    Text(
+                                      store.rating.toString(),
+                                      style: TextStyle(color: colorScheme.primary),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                            trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+                            onTap: () => _onStoreSelected(store),
+                            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                          ),
+                        );
+                      },
+                    ),
                   ),
                 ],
               ),
             ),
-            
-            DraggableScrollableSheet(
-              initialChildSize: 0.4,
-              minChildSize: 0.3,
-              maxChildSize: 0.8,
-              builder: (context, scrollController) => Container(
-                decoration: BoxDecoration(
-                  color: colorScheme.surface,
-                  borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
-                  boxShadow: [
-                    BoxShadow(
-                      color: colorScheme.shadow.withValues(alpha: 0.1),
-                      blurRadius: 10,
-                      offset: const Offset(0, -5),
-                    ),
-                  ],
-                ),
-                child: Column(
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.symmetric(vertical: 8),
-                      width: 40,
-                      height: 4,
-                      decoration: BoxDecoration(
-                        color: colorScheme.onSurfaceVariant.withValues(alpha: 0.2),
-                        borderRadius: BorderRadius.circular(2),
-                      ),
-                    ),
-                    
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-                      child: Row(
-                        children: [
-                          Icon(Icons.storefront_outlined, color: colorScheme.primary),
-                          const SizedBox(width: 8),
-                          Text(
-                            "Magic Coffee Stores",
-                            style: theme.textTheme.titleLarge?.copyWith(
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    
-                    Expanded(
-                      child: ListView.builder(
-                        controller: scrollController,
-                        padding: const EdgeInsets.all(16),
-                        itemCount: stores.length,
-                        itemBuilder: (context, index) {
-                          final store = stores[index];
-                          final isSelected = selectedStoreIndex == index;
-                          
-                          return Card(
-                            margin: const EdgeInsets.only(bottom: 8),
-                            color: isSelected 
-                              ? colorScheme.primaryContainer 
-                              : colorScheme.surfaceContainerHighest,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                              side: BorderSide(
-                                color: isSelected ? colorScheme.primary : Colors.transparent,
-                                width: 1,
-                              ),
-                            ),
-                            child: ListTile(
-                              leading: Icon(Icons.storefront_outlined, color: colorScheme.primary),
-                              title: Text(store.name, style: theme.textTheme.titleMedium),
-                              subtitle: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(store.location),
-                                  Row(
-                                    children: [
-                                      Icon(Icons.star, size: 16, color: colorScheme.primary),
-                                      const SizedBox(width: 4),
-                                      Text(
-                                        store.rating.toString(),
-                                        style: TextStyle(color: colorScheme.primary),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                              trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-                              onTap: () => _onStoreSelected(store),
-                              contentPadding: const EdgeInsets.symmetric(
-                                horizontal: 16,
-                                vertical: 8,
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -263,9 +249,8 @@ class Store {
   });
 
   Map<String, dynamic> toMap() => {
-    'name': name,
-    'location': location,
-    'coordinates': coordinates,
-    'rating': rating,
-  };
+        'name': name,
+        'location': location,
+        'rating': rating,
+      };
 }

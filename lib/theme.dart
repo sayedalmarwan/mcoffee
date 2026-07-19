@@ -1,61 +1,35 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class AppWithSwipeBack extends StatelessWidget {
-  final Widget child;
+ThemeData buildTheme() => _buildFrom(ColorScheme.fromSeed(
+      seedColor: const Color(0xFF3067DE),
+      dynamicSchemeVariant: DynamicSchemeVariant.expressive,
+    ));
 
-  const AppWithSwipeBack({super.key, required this.child});
+ThemeData buildDarkTheme() => _buildFrom(ColorScheme.fromSeed(
+      seedColor: const Color(0xFF3067DE),
+      brightness: Brightness.dark,
+      dynamicSchemeVariant: DynamicSchemeVariant.expressive,
+    ));
 
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onHorizontalDragUpdate: (details) {
-        // Detect swipe from left to right
-        if (details.primaryDelta! > 20) {
-          Navigator.of(context).maybePop();
-        }
-      },
-      child: child,
-    );
-  }
-}
-
-ThemeData buildTheme() {
-  const primary = Color.fromARGB(255, 48, 103, 222);
-  final textTheme = GoogleFonts.poppinsTextTheme();
-
-  return ThemeData(
-    colorScheme: ColorScheme.fromSeed(
-      seedColor: primary,
-      primary: primary,
+ThemeData _buildFrom(ColorScheme cs) {
+  final base = cs.brightness == Brightness.dark ? ThemeData.dark() : ThemeData.light();
+  final tt = GoogleFonts.poppinsTextTheme(base.textTheme);
+  return base.copyWith(
+    colorScheme: cs,
+    textTheme: tt.copyWith(
+      headlineMedium: tt.headlineMedium?.copyWith(fontSize: 32, fontWeight: FontWeight.bold),
+      titleMedium: tt.titleMedium?.copyWith(fontSize: 18),
+      bodyLarge: tt.bodyLarge?.copyWith(fontSize: 17),
     ),
-    scaffoldBackgroundColor: Colors.white,
-    useMaterial3: true,
-    textTheme: textTheme.copyWith(
-      headlineMedium: textTheme.headlineMedium?.copyWith(
-        fontSize: 32,
-        fontWeight: FontWeight.bold,
-        color: primary,
-      ),
-      titleMedium: textTheme.titleMedium?.copyWith(
-        fontSize: 18,
-        color: Colors.grey[600],
-      ),
-      bodyLarge: textTheme.bodyLarge?.copyWith(
-        fontSize: 17,
-        color: primary,
-      ),
-    ),
-    iconTheme: const IconThemeData(
-      color: primary,
-      size: 24,
-    ),
+    iconTheme: IconThemeData(color: cs.primary, size: 24),
     inputDecorationTheme: InputDecorationTheme(
       filled: true,
-      fillColor: primary.withValues(alpha: 0.1),
-      hintStyle: TextStyle(color: primary.withValues(alpha: 0.7)),
-      prefixIconColor: primary.withValues(alpha: 0.7),
-      suffixIconColor: primary.withValues(alpha: 0.7),
+      fillColor: cs.primary.withValues(alpha: 0.1),
+      hintStyle: TextStyle(color: cs.primary.withValues(alpha: 0.7)),
+      prefixIconColor: cs.primary.withValues(alpha: 0.7),
+      suffixIconColor: cs.primary.withValues(alpha: 0.7),
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(16),
         borderSide: BorderSide.none,
@@ -63,22 +37,24 @@ ThemeData buildTheme() {
       contentPadding: const EdgeInsets.all(20),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(16),
-        borderSide: const BorderSide(color: primary, width: 1.5),
+        borderSide: BorderSide(color: cs.primary, width: 1.5),
       ),
     ),
     textButtonTheme: TextButtonThemeData(
       style: TextButton.styleFrom(
-        foregroundColor: primary,
-        textStyle: const TextStyle(
-          fontWeight: FontWeight.w600,
-          fontSize: 16,
-        ),
+        foregroundColor: cs.primary,
+        textStyle: const TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
       ),
     ),
     iconButtonTheme: IconButtonThemeData(
-      style: IconButton.styleFrom(
-        foregroundColor: primary,
-        padding: const EdgeInsets.all(8),
+      style: IconButton.styleFrom(foregroundColor: cs.primary, padding: const EdgeInsets.all(8)),
+    ),
+    appBarTheme: AppBarTheme(
+      systemOverlayStyle: SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        systemNavigationBarColor: Colors.transparent,
+        statusBarIconBrightness:
+            cs.brightness == Brightness.dark ? Brightness.light : Brightness.dark,
       ),
     ),
   );

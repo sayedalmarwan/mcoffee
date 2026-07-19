@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:mcoffee/order_options.dart';
 import 'package:mcoffee/order_payment.dart';
 import 'package:mcoffee/profile.dart';
-import 'package:mcoffee/theme.dart';
 
 class MenuPage extends StatefulWidget {
   final Map<String, dynamic> selectedStore;
@@ -14,28 +13,15 @@ class MenuPage extends StatefulWidget {
   State<MenuPage> createState() => _MenuPageState();
 }
 
-class _MenuPageState extends State<MenuPage>
-    with SingleTickerProviderStateMixin {
+class _MenuPageState extends State<MenuPage> with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
   late final Animation<double> _animation;
   int _selectedIndex = 0;
 
   final List<Map<String, dynamic>> menuItems = const [
-    {
-      'name': 'Americano',
-      'price': 3.99,
-      'image': 'assets/images/americano.png'
-    },
-    {
-      'name': 'Cappuccino',
-      'price': 4.99,
-      'image': 'assets/images/cappuccino.png'
-    },
-    {
-      'name': 'Flat White',
-      'price': 3.99,
-      'image': 'assets/images/flat_white.png'
-    },
+    {'name': 'Americano', 'price': 3.99, 'image': 'assets/images/americano.png'},
+    {'name': 'Cappuccino', 'price': 4.99, 'image': 'assets/images/cappuccino.png'},
+    {'name': 'Flat White', 'price': 3.99, 'image': 'assets/images/flat_white.png'},
     {'name': 'Espresso', 'price': 3.49, 'image': 'assets/images/espresso.png'},
     {'name': 'Latte', 'price': 4.49, 'image': 'assets/images/latte.png'},
     {'name': 'Raf', 'price': 3.49, 'image': 'assets/images/raf.png'},
@@ -59,8 +45,8 @@ class _MenuPageState extends State<MenuPage>
     super.dispose();
   }
 
-  double get _total => MenuPage.cartItems
-      .fold(0, (sum, item) => sum + (item['price'] as double));
+  double get _total =>
+      MenuPage.cartItems.fold(0, (sum, item) => sum + (item['price'] as double));
 
   void _onItemTap(Map<String, dynamic> item) {
     Navigator.push<bool>(
@@ -83,84 +69,79 @@ class _MenuPageState extends State<MenuPage>
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final commonDecoration = BoxDecoration(
-      color: theme.colorScheme.primary,
+    final colorScheme = theme.colorScheme;
+    final bottomDecoration = BoxDecoration(
+      color: colorScheme.primary,
       borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
       boxShadow: [
         BoxShadow(
-          color: Colors.black.withValues(alpha: 0.1),
+          color: colorScheme.shadow.withValues(alpha: 0.1),
           blurRadius: 10,
           offset: const Offset(0, -2),
         ),
       ],
     );
 
-    return AppWithSwipeBack(
-      child: Scaffold(
-        appBar: AppBar(
-          title: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(widget.selectedStore['name']),
-              Text(widget.selectedStore['location'],
-                  style: theme.textTheme.bodyMedium),
-            ],
-          ),
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.person_outline),
-              onPressed: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => ProfilePage(
-                    storeAddress: widget.selectedStore['location'] ?? 'No store selected',
-                  ),
-                ),
-              ),
-            ),
+    return Scaffold(
+      appBar: AppBar(
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(widget.selectedStore['name']),
+            Text(widget.selectedStore['location'], style: theme.textTheme.bodyMedium),
           ],
         ),
-        body: IndexedStack(
-          index: _selectedIndex,
-          children: [_buildMenuTab(), _buildCartTab()],
-        ),
-        bottomNavigationBar: Container(
-          decoration: commonDecoration,
-          child: NavigationBarTheme(
-            data: NavigationBarThemeData(
-              labelTextStyle: WidgetStateProperty.all(
-                const TextStyle(color: Colors.white),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.person_outline),
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ProfilePage(
+                  storeAddress: widget.selectedStore['location'] ?? 'No store selected',
+                ),
               ),
             ),
-            child: NavigationBar(
-              backgroundColor: Colors.transparent,
-              elevation: 0,
-              height: 65,
-              indicatorColor: Colors.white.withValues(alpha: 0.2),
-              selectedIndex: _selectedIndex,
-              labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
-              onDestinationSelected: (index) =>
-                  setState(() => _selectedIndex = index),
-              destinations: [
-                NavigationDestination(
-                  icon: Icon(Icons.storefront_outlined,
-                      color: Colors.white.withValues(alpha: 0.8)),
-                  selectedIcon:
-                      const Icon(Icons.storefront, color: Colors.white),
-                  label: "Menu",
-                ),
-                NavigationDestination(
-                  icon: ScaleTransition(
-                    scale: _animation,
-                    child: Icon(Icons.shopping_cart_outlined,
-                        color: Colors.white.withValues(alpha: 0.8)),
-                  ),
-                  selectedIcon:
-                      const Icon(Icons.shopping_cart, color: Colors.white),
-                  label: "Cart",
-                ),
-              ],
+          ),
+        ],
+      ),
+      body: IndexedStack(
+        index: _selectedIndex,
+        children: [_buildMenuTab(), _buildCartTab()],
+      ),
+      bottomNavigationBar: Container(
+        decoration: bottomDecoration,
+        child: NavigationBarTheme(
+          data: NavigationBarThemeData(
+            labelTextStyle: WidgetStateProperty.all(
+              TextStyle(color: colorScheme.onPrimary),
             ),
+          ),
+          child: NavigationBar(
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+            height: 65,
+            indicatorColor: colorScheme.onPrimary.withValues(alpha: 0.2),
+            selectedIndex: _selectedIndex,
+            labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
+            onDestinationSelected: (index) => setState(() => _selectedIndex = index),
+            destinations: [
+              NavigationDestination(
+                icon: Icon(Icons.storefront_outlined,
+                    color: colorScheme.onPrimary.withValues(alpha: 0.8)),
+                selectedIcon: Icon(Icons.storefront, color: colorScheme.onPrimary),
+                label: "Menu",
+              ),
+              NavigationDestination(
+                icon: ScaleTransition(
+                  scale: _animation,
+                  child: Icon(Icons.shopping_cart_outlined,
+                      color: colorScheme.onPrimary.withValues(alpha: 0.8)),
+                ),
+                selectedIcon: Icon(Icons.shopping_cart, color: colorScheme.onPrimary),
+                label: "Cart",
+              ),
+            ],
           ),
         ),
       ),
@@ -189,7 +170,8 @@ class _MenuPageState extends State<MenuPage>
         decoration: BoxDecoration(
           color: theme.colorScheme.surface,
           borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: theme.colorScheme.primary.withValues(alpha: 0.1)),
+          border: Border.all(
+              color: theme.colorScheme.primary.withValues(alpha: 0.1)),
         ),
         padding: const EdgeInsets.all(12),
         child: Column(
@@ -206,8 +188,7 @@ class _MenuPageState extends State<MenuPage>
             ),
             Text(
               item['name'],
-              style: theme.textTheme.titleMedium
-                  ?.copyWith(fontWeight: FontWeight.bold),
+              style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),
@@ -226,6 +207,9 @@ class _MenuPageState extends State<MenuPage>
   }
 
   Widget _buildCartTab() {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
     if (MenuPage.cartItems.isEmpty) {
       return Center(
         child: Column(
@@ -234,21 +218,15 @@ class _MenuPageState extends State<MenuPage>
             Container(
               padding: const EdgeInsets.all(24),
               decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.surfaceContainerHighest,
+                color: colorScheme.surfaceContainerHighest,
                 shape: BoxShape.circle,
               ),
-              child: Icon(
-                Icons.shopping_cart_outlined,
-                size: 48,
-                color: Theme.of(context).colorScheme.primary,
-              ),
+              child: Icon(Icons.shopping_cart_outlined, size: 48, color: colorScheme.primary),
             ),
             const SizedBox(height: 16),
-            Text('Your cart is empty',
-                style: Theme.of(context).textTheme.titleLarge),
+            Text('Your cart is empty', style: theme.textTheme.titleLarge),
             const SizedBox(height: 8),
-            Text('Add items from the menu',
-                style: Theme.of(context).textTheme.bodyMedium),
+            Text('Add items from the menu', style: theme.textTheme.bodyMedium),
           ],
         ),
       );
@@ -263,12 +241,10 @@ class _MenuPageState extends State<MenuPage>
             itemBuilder: (context, index) => Dismissible(
               key: ValueKey(index),
               direction: DismissDirection.endToStart,
-              onDismissed: (_) =>
-                  setState(() => MenuPage.cartItems.removeAt(index)),
+              onDismissed: (_) => setState(() => MenuPage.cartItems.removeAt(index)),
               child: Card(
                 margin: const EdgeInsets.only(bottom: 16),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(24)),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
                 child: Padding(
                   padding: const EdgeInsets.all(12),
                   child: Row(
@@ -278,9 +254,7 @@ class _MenuPageState extends State<MenuPage>
                         height: 64,
                         padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
-                          color: Theme.of(context)
-                              .colorScheme
-                              .surfaceContainerHighest,
+                          color: colorScheme.surfaceContainerHighest,
                           borderRadius: BorderRadius.circular(16),
                         ),
                         child: Image.asset(MenuPage.cartItems[index]['image'],
@@ -293,18 +267,14 @@ class _MenuPageState extends State<MenuPage>
                           children: [
                             Text(
                               MenuPage.cartItems[index]['name'],
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .titleMedium
-                                  ?.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                              style: theme.textTheme.titleMedium
+                                  ?.copyWith(fontWeight: FontWeight.bold),
                             ),
                             const SizedBox(height: 4),
                             Text(
                               '\$${MenuPage.cartItems[index]['price'].toStringAsFixed(2)}',
                               style: TextStyle(
-                                color: Theme.of(context).colorScheme.primary,
+                                color: colorScheme.primary,
                                 fontWeight: FontWeight.w600,
                               ),
                             ),
@@ -312,8 +282,7 @@ class _MenuPageState extends State<MenuPage>
                         ),
                       ),
                       IconButton(
-                        icon: Icon(Icons.delete_outline,
-                            color: Theme.of(context).colorScheme.error),
+                        icon: Icon(Icons.delete_outline, color: colorScheme.error),
                         onPressed: () =>
                             setState(() => MenuPage.cartItems.removeAt(index)),
                       ),
@@ -328,7 +297,7 @@ class _MenuPageState extends State<MenuPage>
           margin: const EdgeInsets.all(24),
           padding: const EdgeInsets.all(24),
           decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.surfaceContainerHighest,
+            color: colorScheme.surfaceContainerHighest,
             borderRadius: BorderRadius.circular(24),
           ),
           child: Column(
@@ -338,16 +307,14 @@ class _MenuPageState extends State<MenuPage>
                 children: [
                   Text(
                     'Total Amount',
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          color: Theme.of(context).colorScheme.onSurface,
-                        ),
+                    style: theme.textTheme.titleMedium?.copyWith(color: colorScheme.onSurface),
                   ),
                   Text(
                     '\$${_total.toStringAsFixed(2)}',
-                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                          color: Theme.of(context).colorScheme.primary,
-                          fontWeight: FontWeight.bold,
-                        ),
+                    style: theme.textTheme.headlineSmall?.copyWith(
+                      color: colorScheme.primary,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ],
               ),
@@ -366,9 +333,7 @@ class _MenuPageState extends State<MenuPage>
                 },
                 style: FilledButton.styleFrom(
                   minimumSize: const Size.fromHeight(56),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16),
-                  ),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                 ),
                 icon: const Icon(Icons.shopping_cart_checkout_outlined),
                 label: const Text(

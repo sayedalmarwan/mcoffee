@@ -14,9 +14,10 @@ class _StartupScreenState extends State<StartupScreen> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(const Duration(seconds: 3), () {
+    Future.delayed(const Duration(seconds: 3), () async {
       if (!mounted) return;
-      final user = FirebaseAuth.instance.currentUser;
+      final user = await FirebaseAuth.instance.authStateChanges().first;
+      if (!mounted) return;
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:mcoffee/theme.dart';
 
 class OrderPage extends StatefulWidget {
   final String coffeeName;
@@ -38,51 +37,48 @@ class _OrderPageState extends State<OrderPage> {
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
 
-    return AppWithSwipeBack(
-      child: Scaffold(
-        backgroundColor: colorScheme.surface,
-        appBar: AppBar(
-          backgroundColor: colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
-          elevation: 0,
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back, color: colorScheme.onSurface),
-            onPressed: () => Navigator.pop(context),
-          ),
-          title: Text(
-            widget.coffeeName,
-            style: TextStyle(
-                color: colorScheme.onSurface, fontWeight: FontWeight.bold),
-          ),
-          centerTitle: true,
+    return Scaffold(
+      backgroundColor: colorScheme.surface,
+      appBar: AppBar(
+        backgroundColor: colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+        elevation: 0,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: colorScheme.onSurface),
+          onPressed: () => Navigator.pop(context),
         ),
-        body: Column(
-          children: [
-            Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _buildImageSection(colorScheme),
-                    Padding(
-                      padding: const EdgeInsets.all(24),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          _buildPriceAndQuantity(colorScheme, textTheme),
-                          const SizedBox(height: 32),
-                          _buildServiceType(colorScheme),
-                          const SizedBox(height: 32),
-                          _buildVolumeSelection(colorScheme),
-                        ],
-                      ),
+        title: Text(
+          widget.coffeeName,
+          style: TextStyle(color: colorScheme.onSurface, fontWeight: FontWeight.bold),
+        ),
+        centerTitle: true,
+      ),
+      body: Column(
+        children: [
+          Expanded(
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildImageSection(colorScheme),
+                  Padding(
+                    padding: const EdgeInsets.all(24),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _buildPriceAndQuantity(colorScheme, textTheme),
+                        const SizedBox(height: 32),
+                        _buildServiceType(colorScheme),
+                        const SizedBox(height: 32),
+                        _buildVolumeSelection(colorScheme),
+                      ],
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
-            _buildBottomSection(colorScheme, textTheme),
-          ],
-        ),
+          ),
+          _buildBottomSection(colorScheme),
+        ],
       ),
     );
   }
@@ -92,8 +88,7 @@ class _OrderPageState extends State<OrderPage> {
         height: 300,
         decoration: BoxDecoration(
           color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
-          borderRadius:
-              const BorderRadius.vertical(bottom: Radius.circular(32)),
+          borderRadius: const BorderRadius.vertical(bottom: Radius.circular(32)),
         ),
         padding: const EdgeInsets.all(32),
         child: Hero(
@@ -102,16 +97,14 @@ class _OrderPageState extends State<OrderPage> {
         ),
       );
 
-  Widget _buildPriceAndQuantity(ColorScheme colorScheme, TextTheme textTheme) =>
-      Row(
+  Widget _buildPriceAndQuantity(ColorScheme colorScheme, TextTheme textTheme) => Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text('Price',
-                  style: TextStyle(
-                      fontSize: 14, color: colorScheme.onSurfaceVariant)),
+                  style: TextStyle(fontSize: 14, color: colorScheme.onSurfaceVariant)),
               const SizedBox(height: 4),
               Text(
                 '\$${totalPrice.toStringAsFixed(2)}',
@@ -131,13 +124,12 @@ class _OrderPageState extends State<OrderPage> {
             child: Row(
               children: [
                 IconButton(
-                  icon:
-                      Icon(Icons.remove, color: colorScheme.onPrimaryContainer),
+                  icon: Icon(Icons.remove, color: colorScheme.onPrimaryContainer),
                   onPressed: () {
                     if (quantity > 1) setState(() => quantity--);
                   },
                 ),
-                Container(
+                Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: Text(
                     '$quantity',
@@ -163,43 +155,25 @@ class _OrderPageState extends State<OrderPage> {
         children: [
           Text(
             'Service Type',
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              color: colorScheme.onSurface,
-            ),
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: colorScheme.onSurface),
           ),
           const SizedBox(height: 12),
           Row(
             children: [
               Expanded(
-                child: _buildServiceTypeButton(
-                  'Onsite',
-                  Icons.coffee,
-                  serviceType == 'Onsite',
-                  colorScheme,
-                ),
+                child: _buildServiceTypeButton('Onsite', Icons.coffee, serviceType == 'Onsite', colorScheme),
               ),
               const SizedBox(width: 12),
               Expanded(
                 child: _buildServiceTypeButton(
-                  'Takeaway',
-                  Icons.takeout_dining_outlined,
-                  serviceType == 'Takeaway',
-                  colorScheme,
-                ),
+                    'Takeaway', Icons.takeout_dining_outlined, serviceType == 'Takeaway', colorScheme),
               ),
             ],
           ),
         ],
       );
 
-  Widget _buildServiceTypeButton(
-    String type,
-    IconData icon,
-    bool isSelected,
-    ColorScheme colorScheme,
-  ) =>
+  Widget _buildServiceTypeButton(String type, IconData icon, bool isSelected, ColorScheme colorScheme) =>
       Material(
         color: Colors.transparent,
         child: InkWell(
@@ -210,8 +184,7 @@ class _OrderPageState extends State<OrderPage> {
             decoration: BoxDecoration(
               color: isSelected
                   ? colorScheme.primaryContainer
-                  : Color.lerp(colorScheme.surfaceContainerHighest,
-                      colorScheme.primaryContainer, 0.3),
+                  : Color.lerp(colorScheme.surfaceContainerHighest, colorScheme.primaryContainer, 0.3),
               borderRadius: BorderRadius.circular(16),
               border: Border.all(
                 color: isSelected ? colorScheme.primary : Colors.transparent,
@@ -222,20 +195,15 @@ class _OrderPageState extends State<OrderPage> {
               children: [
                 Icon(
                   icon,
-                  color: isSelected
-                      ? colorScheme.primary
-                      : colorScheme.onSurfaceVariant,
+                  color: isSelected ? colorScheme.primary : colorScheme.onSurfaceVariant,
                   size: 28,
                 ),
                 const SizedBox(height: 8),
                 Text(
                   type,
                   style: TextStyle(
-                    color: isSelected
-                        ? colorScheme.primary
-                        : colorScheme.onSurfaceVariant,
-                    fontWeight:
-                        isSelected ? FontWeight.bold : FontWeight.normal,
+                    color: isSelected ? colorScheme.primary : colorScheme.onSurfaceVariant,
+                    fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
                   ),
                 ),
               ],
@@ -249,11 +217,7 @@ class _OrderPageState extends State<OrderPage> {
         children: [
           Text(
             'Volume',
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              color: colorScheme.onSurface,
-            ),
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: colorScheme.onSurface),
           ),
           const SizedBox(height: 12),
           Row(
@@ -285,8 +249,7 @@ class _OrderPageState extends State<OrderPage> {
           decoration: BoxDecoration(
             color: isSelected
                 ? colorScheme.primaryContainer
-                : Color.lerp(colorScheme.surfaceContainerHighest,
-                    colorScheme.primaryContainer, 0.3),
+                : Color.lerp(colorScheme.surfaceContainerHighest, colorScheme.primaryContainer, 0.3),
             borderRadius: BorderRadius.circular(16),
             border: Border.all(
               color: isSelected ? colorScheme.primary : Colors.transparent,
@@ -297,9 +260,7 @@ class _OrderPageState extends State<OrderPage> {
             '$vol ml',
             textAlign: TextAlign.center,
             style: TextStyle(
-              color: isSelected
-                  ? colorScheme.primary
-                  : colorScheme.onSurfaceVariant,
+              color: isSelected ? colorScheme.primary : colorScheme.onSurfaceVariant,
               fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
             ),
           ),
@@ -308,8 +269,7 @@ class _OrderPageState extends State<OrderPage> {
     );
   }
 
-  Widget _buildBottomSection(ColorScheme colorScheme, TextTheme textTheme) =>
-      Container(
+  Widget _buildBottomSection(ColorScheme colorScheme) => Container(
         padding: const EdgeInsets.all(24),
         decoration: BoxDecoration(
           color: colorScheme.primary,
@@ -319,11 +279,6 @@ class _OrderPageState extends State<OrderPage> {
               color: colorScheme.shadow.withValues(alpha: 0.1),
               blurRadius: 10,
               offset: const Offset(0, -5),
-            ),
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.1),
-              blurRadius: 10,
-              offset: const Offset(0, -2),
             ),
           ],
         ),
@@ -335,19 +290,12 @@ class _OrderPageState extends State<OrderPage> {
               children: [
                 Text(
                   'Total Amount',
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.white.withValues(alpha: 0.8),
-                  ),
+                  style: TextStyle(fontSize: 14, color: colorScheme.onPrimary.withValues(alpha: 0.8)),
                 ),
                 const SizedBox(height: 4),
                 Text(
                   '\$${totalPrice.toStringAsFixed(2)}',
-                  style: const TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
+                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: colorScheme.onPrimary),
                 ),
               ],
             ),
@@ -361,13 +309,10 @@ class _OrderPageState extends State<OrderPage> {
                 Navigator.pop(context, true);
               },
               style: FilledButton.styleFrom(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-                backgroundColor: Colors.white,
+                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                backgroundColor: colorScheme.surface,
                 foregroundColor: colorScheme.primary,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
-                ),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
               ),
               icon: const Icon(Icons.shopping_cart_outlined),
               label: const Text(

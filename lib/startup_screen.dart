@@ -1,4 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:mcoffee/cafe.dart';
 import 'package:mcoffee/welcome.dart';
 
 class StartupScreen extends StatefulWidget {
@@ -13,12 +15,14 @@ class _StartupScreenState extends State<StartupScreen> {
   void initState() {
     super.initState();
     Future.delayed(const Duration(seconds: 3), () {
-      if (mounted) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const WelcomePage()),
-        );
-      }
+      if (!mounted) return;
+      final user = FirebaseAuth.instance.currentUser;
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => user != null ? const CafePage() : const WelcomePage(),
+        ),
+      );
     });
   }
 

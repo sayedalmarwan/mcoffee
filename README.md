@@ -7,14 +7,14 @@ A polished Flutter coffee-shop ordering app built for portfolio demonstration. B
 ## Screenshots
 
 <p align="center">
+  <img src="screenshots/03_cafe.png" width="180" alt="Store Map"/>
   <img src="screenshots/04_menu.png" width="180" alt="Menu"/>
   <img src="screenshots/05_order_options.png" width="180" alt="Order Options"/>
-  <img src="screenshots/06_payment.png" width="180" alt="Payment"/>
 </p>
 <p align="center">
+  <img src="screenshots/06_payment.png" width="180" alt="Payment"/>
   <img src="screenshots/07_confirmed.png" width="180" alt="Order Confirmed"/>
   <img src="screenshots/08_profile.png" width="180" alt="Profile"/>
-  <img src="screenshots/09_qr_code.png" width="180" alt="Member QR"/>
 </p>
 
 ---
